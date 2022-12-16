@@ -20,17 +20,24 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 });
+// ->middleware("auth")
+// Without login chirna didaina
+// ROute ma middle ware attached huncha
+// middleware is set of rules
+
+
+// blade and relationship
 
 Route::get('/test/{id}',[DemoController::class,"demo"]);
-Route::get('/product',[ProductController::class,"index"]);
+Route::get('/product',[ProductController::class,"index"])->middleware("auth");
 Route::get('/sales',[SaleController::class,"index"]);
-Route::get('/product/create',[ProductController::class,"create"]);
+Route::get('/product/create',[ProductController::class,"create"])->middleware("auth");
 Route::post('/product/store',[ProductController::class,"store"]);
 Route::get('/product/edit/{id}',[ProductController::class,"edit"]);
 Route::post('/product/update/{id}',[ProductController::class,"update"]);
-Route::get('/user',[UserController::class,"index"]);
+Route::get('/register',[UserController::class,"register"])->name("register");
 Route::post('/register',[UserController::class,"storeUser"]);
 
-Route::get('/login',[UserController::class,"login"]);
-Route::post('/logged',[UserController::class,"authenticate"]);
+Route::get('/login',[UserController::class,"login"])->name("login");
+Route::post('/logged',[UserController::class,"authenticate"])->name("login.post");
 

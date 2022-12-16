@@ -9,11 +9,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function index(){
+    public function register(){
     return view("register.index");
     }
     public function storeUser(Request $request){
-        $password=Hash::make($request->newPassword);
+        $password=Hash::make($request->password);
         $user = new User();
         $user->name = $request ->name;
         $user->email = $request ->email;
@@ -29,6 +29,8 @@ class UserController extends Controller
     {   
         // $credentials = ["email" => $request->email,"password" => $request->password];
         // dd($request);
+        
+        // request validation part
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -37,8 +39,6 @@ class UserController extends Controller
             $request->session()->regenerate();
             return "Login Succesful";
         }
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return "Error";
     }
 }
