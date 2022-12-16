@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
+class UserController extends Controller
+{
+    public function index(){
+    return view("register.index");
+    }
+    public function storeUser(Request $request){
+        $password=Hash::make($request->newPassword);
+        $user = new User();
+        $user->name = $request ->name;
+        $user->email = $request ->email;
+        $user->password = $password;
+        $user ->save();
+    }
+    
+    public function login(){
+        return view("login.index");
+    }
+    
+    public function authenticate(Request $request)
+    {   
+        // $credentials = ["email" => $request->email,"password" => $request->password];
+        // dd($request);
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return "Login Succesful";
+        }
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+}

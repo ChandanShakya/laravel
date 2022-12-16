@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +28,9 @@ Route::get('/product/create',[ProductController::class,"create"]);
 Route::post('/product/store',[ProductController::class,"store"]);
 Route::get('/product/edit/{id}',[ProductController::class,"edit"]);
 Route::post('/product/update/{id}',[ProductController::class,"update"]);
+Route::get('/user',[UserController::class,"index"]);
+Route::post('/register',[UserController::class,"storeUser"]);
+
+Route::get('/login',[UserController::class,"login"]);
+Route::post('/logged',[UserController::class,"authenticate"]);
+

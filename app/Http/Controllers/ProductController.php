@@ -81,15 +81,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        // $product=new Product();
-        // $product->name= $request->name;
-        // $product->stock= $request->stock;
-        // $product->image_url= $request->image_url;
-        // $product->price= $request->price;
-        // $product->dealer= $request->dealer;
-        // $product->date_arrived=$request->date_arrived;
-        // $product->save();
+        
+        $product=Product::find($id);
+        $product->name= $request->name;
+        $product->stock= $request->stock;
+        $product->image_url= $request->image_url;
+        $product->price= $request->price;
+        $product->dealer= $request->dealer;
+        $product->date_arrived=$request->date_arrived;
+        $product->save();
+        return redirect ()->back ();
     }
 
     /**
