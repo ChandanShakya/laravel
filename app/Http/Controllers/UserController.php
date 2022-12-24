@@ -9,27 +9,32 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function register(){
-    return view("register.index");
+    public function register()
+    {
+        return view("register.index");
     }
-    public function storeUser(Request $request){
-        $password=Hash::make($request->password);
+    public function storeUser(Request $request)
+    {
+        $password = Hash::make($request->password);
         $user = new User();
-        $user->name = $request ->name;
-        $user->email = $request ->email;
+        $user->name = $request->name;
+        $user->email = $request->email;
         $user->password = $password;
-        $user ->save();
+        $user->save();
+        // redirect to login page
+        return redirect()->route("login");
     }
-    
-    public function login(){
+
+    public function login()
+    {
         return view("login.index");
     }
-    
+
     public function authenticate(Request $request)
-    {   
+    {
         // $credentials = ["email" => $request->email,"password" => $request->password];
         // dd($request);
-        
+
         // request validation part
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -37,8 +42,19 @@ class UserController extends Controller
         ]);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return "Login Succesful";
+            return redirect()->route("logOutPage");
         }
         return "Error";
+    }
+    public function logOutPage()
+    {
+        return view("login.logout");
+    }
+    public function logOut(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route("login");
     }
 }
