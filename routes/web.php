@@ -31,6 +31,10 @@ Route::get('/', function () {
 Route::get('/test/{id}', [DemoController::class, "demo"]);
 Route::get('/product', [ProductController::class, "index"])->middleware("auth");
 Route::get('/sales', [SaleController::class, "index"]);
+
+Route::get('/sales/create', [SaleController::class, "create"])->middleware("auth");
+Route::post('/sales/store', [ProductController::class, "store"]);
+
 Route::get('/product/create', [ProductController::class, "create"])->middleware("auth");
 Route::post('/product/store', [ProductController::class, "store"]);
 Route::get('/product/edit/{id}', [ProductController::class, "edit"]);

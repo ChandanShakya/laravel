@@ -28,6 +28,8 @@ class SaleController extends Controller
     public function create()
     {
         //
+        return view("sales.create");
+
     }
 
     /**
@@ -39,6 +41,13 @@ class SaleController extends Controller
     public function store(StoreSaleRequest $request)
     {
         //
+        $sale=new Sale();
+        $sale->id=$request->id;
+        $sale->product_id= $request->product_id;
+        $sale->price= $request->price;
+        $sale->date_sales=$request->date_sales;
+        $sale->quantity=$request->quantity;
+        $sale->save();
     }
 
     /**
