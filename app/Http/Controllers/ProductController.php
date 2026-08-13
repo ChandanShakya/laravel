@@ -2,58 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
-        $products=Product::all();
+        $products = Product::all();
+
         // return $product;
-        return view('product.index',compact('products'));
+        return view('product.index', compact('products'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
         //
-        return view("product.create");
+        return view('product.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function store(Request $request)
+public function store(Request $request)
     {
-        $product=new Product();
-        $product->id=$request->id;
-        $product->name= $request->name;
-        $product->stock= $request->stock;
-        $product->image_url= $request->image_url;
-        $product->price= $request->price;
-        $product->dealer= $request->dealer;
-        $product->date_arrived=$request->date_arrived;
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'image_url' => ['nullable', 'string', 'max:255'],
+            'price' => ['required', 'integer', 'min:0'],
+            'dealer' => ['nullable', 'string', 'max:255'],
+            'date_arrived' => ['nullable', 'date'],
+        ]);
+
+        $product = new Product();
+        $product->name = $request->name;
+        $product->stock = $request->stock;
+        $product->image_url = $request->image_url;
+        $product->price = $request->price;
+        $product->dealer = $request->dealer;
+        $product->date_arrived = $request->date_arrived;
         $product->save();
+
+        return redirect()->route('product.index')->with('success', 'Product created.');
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -64,44 +75,56 @@ class ProductController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
-        $product=Product::find($id);
-        return view("product.edit",compact("product"));
-        
+        $product = Product::findOrFail($id);
+
+        return view('product.edit', compact('product'));
+
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function update(Request $request, $id)
+public function update(Request $request, $id)
     {
-        
-        $product=Product::find($id);
-        $product->name= $request->name;
-        $product->stock= $request->stock;
-        $product->image_url= $request->image_url;
-        $product->price= $request->price;
-        $product->dealer= $request->dealer;
-        $product->date_arrived=$request->date_arrived;
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'image_url' => ['nullable', 'string', 'max:255'],
+            'price' => ['required', 'integer', 'min:0'],
+            'dealer' => ['nullable', 'string', 'max:255'],
+            'date_arrived' => ['nullable', 'date'],
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->name = $request->name;
+        $product->stock = $request->stock;
+        $product->image_url = $request->image_url;
+        $product->price = $request->price;
+        $product->dealer = $request->dealer;
+        $product->date_arrived = $request->date_arrived;
         $product->save();
-        return redirect ()->back ();
+
+        return redirect()->route('product.index')->with('success', 'Product updated.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('product.index')->with('success', 'Product deleted.');
     }
 }

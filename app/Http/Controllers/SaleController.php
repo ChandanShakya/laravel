@@ -4,57 +4,57 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
+use App\Models\Product;
 use App\Models\Sale;
+use Illuminate\Http\Response;
 
 class SaleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
-        //
-        $sale=Sale::all();
-        return $sale;
+        $sale = Sale::with('product')->get();
+
+        return view('sales.index', compact('sale'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
-        //
-        return view("sales.create");
+        $products = Product::all();
 
+        return view('sales.create', compact('products'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreSaleRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(StoreSaleRequest $request)
     {
-        //
-        $sale=new Sale();
-        $sale->id=$request->id;
-        $sale->product_id= $request->product_id;
-        $sale->price= $request->price;
-        $sale->date_sales=$request->date_sales;
-        $sale->quantity=$request->quantity;
+        $sale = new Sale;
+        $sale->product_id = $request->product_id;
+        $sale->price = $request->price;
+        $sale->date_sales = $request->date_sales;
+        $sale->quantity = $request->quantity;
         $sale->save();
+
+        return redirect()->route('sale.index')->with('success', 'Sale recorded.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Sale $sale)
     {
@@ -64,8 +64,7 @@ class SaleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Sale $sale)
     {
@@ -75,9 +74,7 @@ class SaleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateSaleRequest  $request
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(UpdateSaleRequest $request, Sale $sale)
     {
@@ -87,8 +84,7 @@ class SaleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Sale $sale)
     {

@@ -23,18 +23,28 @@
         </div>
         <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
 
+          @if ($errors->any())
+          <div class="alert alert-danger">
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
+
           <form action="{{route('register.post')}}" method="post">
             @csrf
 
             <!-- Name input -->
             <div class="form-outline mb-4">
-              <input type="text" id="form1Example01" class="form-control form-control-lg" name="name" />
-              <label class="form-label" for="form1Example13">Name</label>
+              <input type="text" id="form1Example01" class="form-control form-control-lg" name="name" value="{{ old('name') }}" />
+              <label class="form-label" for="form1Example01">Name</label>
             </div>
 
             <!-- Email input -->
             <div class="form-outline mb-4">
-              <input type="email" id="form1Example13" class="form-control form-control-lg" name="email" />
+              <input type="email" id="form1Example13" class="form-control form-control-lg" name="email" value="{{ old('email') }}" />
               <label class="form-label" for="form1Example13">Email address</label>
             </div>
 
@@ -42,6 +52,12 @@
             <div class="form-outline mb-4">
               <input type="password" id="form1Example23" class="form-control form-control-lg" name="password" />
               <label class="form-label" for="form1Example23">Password</label>
+            </div>
+
+            <!-- Password confirmation input -->
+            <div class="form-outline mb-4">
+              <input type="password" id="form1Example24" class="form-control form-control-lg" name="password_confirmation" />
+              <label class="form-label" for="form1Example24">Confirm Password</label>
             </div>
 
             <!-- Submit button -->
